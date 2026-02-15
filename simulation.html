@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>MotorLab - Simulation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">⚡ MotorLab</div>
+        <nav>
+            <a href="index.html" class="nav-link">📖 บทเรียนพื้นฐาน</a>
+            <a href="simulation.html" class="nav-link active">🔬 ห้องทดลองเสมือน</a>
+            <a href="quiz.html" class="nav-link">📝 แบบทดสอบ</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+    <h1>🔬 ห้องทดลองมอเตอร์อย่างง่าย</h1>
+    <div class="sim-container">
+        <div class="canvas-box" id="sim-screen">
+            <div id="overheat-alert" class="alert-hidden">⚠️ OVERHEAT! High Voltage Danger</div>
+            
+            <svg width="400" height="300" viewBox="0 0 400 300">
+                <rect x="50" y="240" width="300" height="20" fill="#8b4513" />
+                <rect x="150" y="220" width="100" height="20" fill="#475569" rx="5" />
+                <text x="175" y="235" fill="white" font-size="10">MAGNET</text>
+                
+                <path d="M 120 240 L 120 120" stroke="#94a3b8" stroke-width="5" fill="none" />
+                <path d="M 280 240 L 280 120" stroke="#94a3b8" stroke-width="5" fill="none" />
+                
+                <g id="rotor-group">
+                    <ellipse id="coil-visual" cx="200" cy="120" rx="60" ry="20" fill="none" stroke="#f59e0b" stroke-width="4" />
+                    <line x1="120" y1="120" x2="280" y2="120" stroke="#f59e0b" stroke-width="2" />
+                </g>
+            </svg>
+
+            <div class="stats-panel">
+                <div>ความเร็วรอบ: <span id="rpm-txt">0</span> RPM</div>
+                <div>แรงบิด (Torque): <span id="tq-txt">0.00</span> N·m</div>
+            </div>
+        </div>
+
+        <div class="controls-box">
+            <div class="card">
+                <label>แรงดันไฟฟ้า (V): <b id="v-val">2.0</b> V</label>
+                <input type="range" id="v-slider" min="2" max="9" step="0.5" value="2">
+            </div>
+            <div class="card">
+                <label>จำนวนรอบขดลวด (N): <b id="n-val">1</b> รอบ</label>
+                <input type="range" id="n-slider" min="1" max="10" step="1" value="1">
+            </div>
+            <button id="sound-btn" class="nav-link" style="background:#1e293b; color:white; border:none; width:100%;">🔊 เปิดเสียงมอเตอร์</button>
+        </div>
+    </div>
+</main>
+
+    <button class="chat-btn" onclick="toggleChat()">💬 ถาม Chatbot</button>
+    <div class="chat-window" id="chat-window">
+        <div style="background:var(--primary); color:white; padding:15px; display:flex; justify-content:space-between;">
+            <span>K.POP Clone</span>
+            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
+        </div>
+        <div id="chat-logs" style="flex:1; padding:15px; overflow-y:auto; background:#f8fafc;"></div>
+        <div style="padding:10px; border-top:1px solid #ddd; display:flex;">
+            <input type="text" id="chat-input" placeholder="ถามเรื่องการทดลอง..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
+            <button onclick="askAI()" style="margin-left:5px; padding:10px; background:var(--accent); color:white; border:none; border-radius:5px;">ส่ง</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

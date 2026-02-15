@@ -1,0 +1,105 @@
+:root {
+    --sidebar-width: 260px;
+    --primary: #1e293b;
+    --accent: #3b82f6;
+    --bg: #f8fafc;
+    --card: #ffffff;
+}
+
+* { box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
+body { margin: 0; background: var(--bg); display: flex; min-height: 100vh; }
+
+/* Sidebar Fixed & Vertical */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--primary);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column; /* บังคับเรียงแนวตั้ง */
+}
+
+.sidebar .logo { font-size: 1.5rem; font-weight: bold; margin-bottom: 2rem; color: var(--accent); }
+.sidebar nav { display: flex; flex-direction: column; gap: 10px; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+.nav-link.active, .nav-link:hover { background: var(--accent); color: white; }
+
+/* Main Area */
+.main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 3rem;
+}
+
+/* Card & Content */
+.card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.formula { background: #f1f5f9; padding: 10px; border-left: 4px solid var(--accent); font-family: monospace; }
+
+/* Simulation Display */
+.sim-container { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
+.canvas-box { background: #fff; border: 2px solid #e2e8f0; border-radius: 12px; height: 450px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+
+/* Chatbot Floating */
+.chat-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 50px; cursor: pointer; z-index: 1000; }
+.chat-window { position: fixed; bottom: 80px; right: 20px; width: 350px; height: 450px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 1000; }
+.chat-window.active { display: flex; }
+
+/* Overheat Alert */
+.alert-hidden { display: none; }
+.alert-visible {
+    position: absolute;
+    top: 10px;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    animation: blink 0.5s infinite;
+    z-index: 10;
+}
+
+@keyframes blink { 50% { opacity: 0.5; } }
+
+/* Quiz Styles */
+.quiz-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: 0.2s;
+}
+.quiz-item:hover { border-color: var(--accent); }
+.quiz-item p { font-weight: bold; color: var(--primary); margin-top: 0; }
+
+.quiz-item label {
+    display: block;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin: 8px 0;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: 0.3s;
+}
+.quiz-item label:hover { background: #eff6ff; border-color: var(--accent); }
+
+.stats-panel {
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    font-family: monospace;
+    font-size: 1.1rem;
+    color: var(--primary);
+}
