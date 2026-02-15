@@ -103,3 +103,8 @@ body { margin: 0; background: var(--bg); display: flex; min-height: 100vh; }
     font-size: 1.1rem;
     color: var(--primary);
 }
+
+.hand {
+    width: 500px;
+    height: 300px;
+}
