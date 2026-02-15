@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     }
 
     // แก้ไขชื่อ Model เป็น gemini-1.5-flash
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     try {
         const response = await fetch(apiUrl, {
