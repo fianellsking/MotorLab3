@@ -1,7 +1,4 @@
-// หมายเหตุ: ไม่ต้องมีตัวแปร GEMINI_KEY และ API_URL ของ Google ในนี้แล้ว
-// เพราะเราจะเรียกผ่าน API Route ของเราเอง เพื่อความปลอดภัย
 
-// --- 1. ระบบเสียง (Motor Sound) ---
 let audioCtx = null;
 let osc = null;
 let isAudioOn = false;
