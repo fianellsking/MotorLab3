@@ -112,7 +112,7 @@ async function askAI() {
         if (data.error) throw new Error(data.error);
 
         const reply = data.candidates[0].content.parts[0].text;
-        logs.innerHTML += `<div class="ai-msg" style="color:blue;"><b>Gemini:</b> ${reply}</div>`;
+        logs.innerHTML += `<div class="ai-msg" style="color:blue;"><b>K.POP2:</b> ${reply}</div>`;
     } catch (e) {
         console.error(e);
         logs.innerHTML += `<div style="color:red;"><b>ระบบ:</b> ไม่สามารถติดต่อ AI ได้ (ตรวจสอบการตั้งค่า Environment Variables ใน Vercel)</div>`;
@@ -179,4 +179,5 @@ function checkQuiz() {
     document.getElementById('result-box').style.display = 'block';
     document.getElementById('score-val').innerText = score;
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
 }
