@@ -11,7 +11,6 @@ async function askAI() {
     logs.scrollTop = logs.scrollHeight;
 
     try {
-        // เรียกไปที่ Backend Proxy (Vercel Function) แทนการเรียก Google โดยตรง
         const res = await fetch('/api/chat', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -22,11 +21,16 @@ async function askAI() {
         
         if (data.error) throw new Error(data.error);
 
-        const reply = data.candidates[0].content.parts[0].text;
+        // --- แก้ไขจุดนี้ ---
+        // เปลี่ยนจาก data.candidates[0].content.parts[0].text 
+        // เป็น data.reply ตามที่ส่งมาจากหลังบ้าน
+        const reply = data.reply || "ขออภัยครับ ผมไม่สามารถประมวลผลคำตอบได้";
+        
         logs.innerHTML += `<div class="ai-msg" style="color:blue;"><b>K.POP2:</b> ${reply}</div>`;
     } catch (e) {
         console.error(e);
-        logs.innerHTML += `<div style="color:red;"><b>ระบบ:</b> ไม่สามารถติดต่อ AI ได้ (ตรวจสอบการตั้งค่า Environment Variables ใน Vercel)</div>`;
+        // แสดง Error จริงๆ ที่เกิดขึ้นใน Console เพื่อช่วยให้เรา debug ง่ายขึ้น
+        logs.innerHTML += `<div style="color:red;"><b>ระบบ:</b> ${e.message || 'ไม่สามารถติดต่อ AI ได้'}</div>`;
     }
     logs.scrollTop = logs.scrollHeight;
 }
@@ -90,4 +94,5 @@ function checkQuiz() {
     document.getElementById('result-box').style.display = 'block';
     document.getElementById('score-val').innerText = score;
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
 }
