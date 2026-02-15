@@ -1,0 +1,200 @@
+/* ธีมสีใหม่สำหรับหน้า Simulation */
+:root {
+    --sim-bg: #0f172a;
+    --sim-card: #1e293b;
+    --sim-text: #e2e8f0;
+    --sim-accent: #f59e0b; /* สีส้ม */
+    --sim-danger: #ef4444;
+    --sim-success: #10b981;
+    --sim-primary: #3b82f6;
+}
+
+body {
+    background-color: var(--sim-bg); /* เปลี่ยนสีพื้นหลังทั้งหน้า */
+}
+
+.main-content {
+    color: var(--sim-text);
+}
+
+/* Layout หลัก */
+.sim-dashboard {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* แบ่งซ้าย-ขวา */
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ส่วนแสดงผลซ้าย */
+.sim-view-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.canvas-box {
+    background: #131c31;
+    border-radius: 16px;
+    border: 2px solid #2c3e50;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+}
+
+.sim-svg {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+}
+
+/* Stats Panel ด้านล่าง */
+.stats-panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.stat-card {
+    background: var(--sim-card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #334155;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #10b981;
+}
+
+.stat-value small {
+    font-size: 1rem;
+    color: #94a3b8;
+}
+
+.accent-text { color: var(--sim-accent); }
+
+/* ส่วนควบคุมขวา */
+.control-panel-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.control-card, .info-card {
+    background: var(--sim-card);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid #334155;
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.control-header h2 { margin: 0; font-size: 1.5rem; }
+
+.header-actions { display: flex; gap: 10px; }
+
+.icon-btn {
+    background: #334155;
+    color: var(--sim-text);
+    border: none;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+}
+.icon-btn:hover { background: #475569; }
+
+.stop-btn {
+    background: var(--sim-danger);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex; align-items: center; gap: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.stop-btn.stopped { background: var(--sim-success); }
+.stop-btn:hover { opacity: 0.9; }
+
+/* Sliders */
+.control-group { margin-bottom: 1.5rem; }
+
+.control-label {
+    display: flex; justify-content: space-between;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.label-icon { vertical-align: middle; margin-right: 5px; color: var(--sim-primary); }
+.control-value { font-family: 'JetBrains Mono', monospace; color: var(--sim-primary); }
+
+.styled-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #334155;
+    border-radius: 5px;
+    outline: none;
+}
+
+.styled-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    background: var(--sim-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--sim-bg);
+}
+
+.slider-labels {
+    display: flex; justify-content: space-between;
+    font-size: 0.8rem; color: #64748b; margin-top: 5px;
+}
+
+/* Info Card & Alert */
+.info-card h3 { margin-top: 0; color: #94a3b8; }
+.info-card ul { padding-left: 20px; color: #cbd5e1; }
+.info-card li { margin-bottom: 0.5rem; }
+
+.alert-visible {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(239, 68, 68, 0.9); color: white;
+    padding: 8px 16px; border-radius: 30px;
+    font-weight: bold; display: flex; align-items: center; gap: 5px;
+    animation: blink 0.5s infinite; z-index: 10;
+}
+.alert-hidden { display: none; }
+
+/* ปรับแต่ง Scrollbar สำหรับ Chat */
+#chat-logs::-webkit-scrollbar { width: 8px; }
+#chat-logs::-webkit-scrollbar-track { background: #1e293b; }
+#chat-logs::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sim-dashboard { grid-template-columns: 1fr; }
+    .stats-panel { grid-template-columns: repeat(2, 1fr); }
+}

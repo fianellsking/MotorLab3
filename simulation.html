@@ -2,12 +2,13 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>MotorLab - Simulation</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Physics Experiment v2.0</title>
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="simulation.css"> <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 </head>
 <body>
     <aside class="sidebar">
-        <div class="logo">⚡ MotorLab</div>
+        <div class="logo">⚡ V-LAB : DC Motor</div>
         <nav>
             <a href="index.html" class="nav-link">📖 บทเรียนพื้นฐาน</a>
             <a href="simulation.html" class="nav-link active">🔬 ห้องทดลองเสมือน</a>
@@ -16,44 +17,93 @@
     </aside>
 
     <main class="main-content">
-    <h1>🔬 ห้องทดลองมอเตอร์อย่างง่าย</h1>
-    <div class="sim-container">
-        <div class="canvas-box" id="sim-screen">
-            <div id="overheat-alert" class="alert-hidden">⚠️ OVERHEAT! High Voltage Danger</div>
-            
-            <svg width="400" height="300" viewBox="0 0 400 300">
-                <rect x="50" y="240" width="300" height="20" fill="#8b4513" />
-                <rect x="150" y="220" width="100" height="20" fill="#475569" rx="5" />
-                <text x="175" y="235" fill="white" font-size="10">MAGNET</text>
-                
-                <path d="M 120 240 L 120 120" stroke="#94a3b8" stroke-width="5" fill="none" />
-                <path d="M 280 240 L 280 120" stroke="#94a3b8" stroke-width="5" fill="none" />
-                
-                <g id="rotor-group">
-                    <ellipse id="coil-visual" cx="200" cy="120" rx="60" ry="20" fill="none" stroke="#f59e0b" stroke-width="4" />
-                    <line x1="120" y1="120" x2="280" y2="120" stroke="#f59e0b" stroke-width="2" />
-                </g>
-            </svg>
+        <div class="sim-dashboard">
+            <div class="sim-view-container">
+                <div class="canvas-box">
+                    <div id="overheat-alert" class="alert-hidden">⚠️ OVERHEAT! High Voltage Danger</div>
+                    <svg class="sim-svg" viewBox="0 0 600 400">
+                        <rect x="100" y="280" width="400" height="60" rx="5" fill="#334155" />
+                        <rect x="200" y="220" width="200" height="60" fill="#94a3b8" />
+                        <text x="300" y="255" fill="#1e293b" font-weight="bold" text-anchor="middle">MAGNET</text>
 
-            <div class="stats-panel">
-                <div>ความเร็วรอบ: <span id="rpm-txt">0</span> RPM</div>
-                <div>แรงบิด (Torque): <span id="tq-txt">0.00</span> N·m</div>
+                        <path d="M 150 280 L 150 180" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 450 280 L 450 180" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 100 320 L 150 320 L 150 280" stroke="#ef4444" stroke-width="4" fill="none"/>
+                        <path d="M 500 320 L 450 320 L 450 280" stroke="#3b82f6" stroke-width="4" fill="none"/>
+
+                        <g transform="translate(300, 180)">
+    <g id="force-vectors" opacity="0.8">
+        <line x1="-80" y1="0" x2="-80" y2="-40" stroke="#10b981" stroke-width="4" marker-end="url(#arrowhead)"/>
+        <line x1="80" y1="0" x2="80" y2="40" stroke="#10b981" stroke-width="4" marker-end="url(#arrowhead)"/>
+        <text x="-95" y="-45" fill="#10b981" font-size="16" font-weight="bold">F</text>
+        <text x="85" y="55" fill="#10b981" font-size="16" font-weight="bold">F</text>
+    </g>
+
+    <g id="coil-only" style="transform-origin: center; transform-box: fill-box;">
+        <rect x="-80" y="-30" width="160" height="60" fill="rgba(245, 158, 11, 0.1)" stroke="#f59e0b" stroke-width="4" id="coil-visual" rx="4"/>
+        <line x1="-150" y1="0" x2="150" y2="0" stroke="#f59e0b" stroke-width="4" />
+    </g>
+</g>
+
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stat-card">
+                        <div class="stat-label">SPEED</div>
+                        <div class="stat-value"><span id="speed-val">0</span> <small>RPM</small></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">TORQUE</div>
+                        <div class="stat-value"><span id="torque-val">0.00</span> <small>Nm</small></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">INPUT</div>
+                        <div class="stat-value"><span id="input-val">2</span> <small>V</small></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">COIL</div>
+                        <div class="stat-value"><span id="coil-val">1</span> <small>N</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel-container">
+                <div class="control-card">
+                    <div class="control-header">
+                        <h2>Control Panel</h2>
+                        <div class="header-actions">
+                            <button id="sound-btn" class="icon-btn"><span class="material-icons-round">volume_up</span></button>
+                            <button id="stop-btn" class="stop-btn"><span class="material-icons-round">pause</span> STOP</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span><span class="material-icons-round label-icon">bolt</span> Voltage (V)</span>
+                            <span class="control-value" id="v-disp">2 V</span>
+                        </div>
+                        <input type="range" id="v-slider" class="styled-slider" min="0" max="9" step="0.1" value="2">
+                        <div class="slider-labels"><span>0V</span><span>5V</span><span>9V</span></div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span><span class="material-icons-round label-icon">sync</span> Coil Turns (N)</span>
+                            <span class="control-value" id="n-disp">1</span>
+                        </div>
+                        <input type="range" id="n-slider" class="styled-slider" min="1" max="20" step="1" value="1">
+                        <div class="slider-labels"><span>1 Turn</span><span>20 Turns</span></div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="controls-box">
-            <div class="card">
-                <label>แรงดันไฟฟ้า (V): <b id="v-val">2.0</b> V</label>
-                <input type="range" id="v-slider" min="2" max="9" step="0.5" value="2">
-            </div>
-            <div class="card">
-                <label>จำนวนรอบขดลวด (N): <b id="n-val">1</b> รอบ</label>
-                <input type="range" id="n-slider" min="1" max="10" step="1" value="1">
-            </div>
-            <button id="sound-btn" class="nav-link" style="background:#1e293b; color:white; border:none; width:100%;">🔊 เปิดเสียงมอเตอร์</button>
-        </div>
-    </div>
-</main>
+    </main>
 
     <button class="chat-btn" onclick="toggleChat()">💬 ถาม Chatbot</button>
     <div class="chat-window" id="chat-window">
@@ -61,13 +111,12 @@
             <span>K.POP Clone</span>
             <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
         </div>
-        <div id="chat-logs" style="flex:1; padding:15px; overflow-y:auto; background:#f8fafc;"></div>
+        <div id="chat-logs" style="flex:1; padding:15px; overflow-y:auto;"></div>
         <div style="padding:10px; border-top:1px solid #ddd; display:flex;">
-            <input type="text" id="chat-input" placeholder="ถามเรื่องการทดลอง..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
-            <button onclick="askAI()" style="margin-left:5px; padding:10px; background:var(--accent); color:white; border:none; border-radius:5px;">ส่ง</button>
+            <input type="text" id="chat-input" placeholder="ถามคำถามเกี่ยวกับเนื้อหา..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:4px;">
+            <button onclick="askAI()" style="margin-left:5px; background:var(--accent); border:none; color:white; padding:8px 15px; border-radius:4px;">ส่ง</button>
         </div>
     </div>
-
     <script src="script.js"></script>
-</body>
+    <script src="simulation.js"></script> </body>
 </html>

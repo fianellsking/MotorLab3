@@ -1,92 +1,3 @@
-
-let audioCtx = null;
-let osc = null;
-let isAudioOn = false;
-
-document.getElementById('sound-btn')?.addEventListener('click', function() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        gain.gain.value = 0.05;
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        audioCtx.suspend(); 
-    }
-
-    if (!isAudioOn) {
-        audioCtx.resume();
-        this.innerText = "🔈 ปิดเสียงมอเตอร์";
-        isAudioOn = true;
-    } else {
-        audioCtx.suspend();
-        this.innerText = "🔊 เปิดเสียงมอเตอร์";
-        isAudioOn = false;
-    }
-});
-
-// --- 2. Simulation Logic ---
-function updateSimulation() {
-    const v = parseFloat(document.getElementById('v-slider')?.value || 0);
-    const n = parseInt(document.getElementById('n-slider')?.value || 1);
-    
-    // อัปเดต UI ตัวเลข
-    if(document.getElementById('v-val')) document.getElementById('v-val').innerText = v.toFixed(1);
-    if(document.getElementById('n-val')) document.getElementById('n-val').innerText = n;
-
-    // คำนวณค่าทางฟิสิกส์ (จำลอง)
-    const rpm = v * n * 50;
-    const torque = (v * n * 0.015).toFixed(3);
-    
-    if(document.getElementById('rpm-txt')) document.getElementById('rpm-txt').innerText = Math.floor(rpm);
-    if(document.getElementById('tq-txt')) document.getElementById('tq-txt').innerText = torque;
-
-    // ระบบแจ้งเตือนความร้อน (Overheat)
-    const alertBox = document.getElementById('overheat-alert');
-    const simScreen = document.getElementById('sim-screen');
-    const coil = document.getElementById('coil-visual');
-
-    if (v > 6) {
-        if(alertBox) alertBox.className = "alert-visible";
-        if(simScreen) simScreen.style.borderColor = "#ef4444";
-        if(coil) coil.setAttribute('stroke', '#ef4444');
-    } else {
-        if(alertBox) alertBox.className = "alert-hidden";
-        if(simScreen) simScreen.style.borderColor = "#e2e8f0";
-        if(coil) coil.setAttribute('stroke', '#f59e0b');
-    }
-
-    // ปรับความหนาขดลวดตามจำนวนรอบ N
-    if(coil) coil.setAttribute('stroke-width', 2 + (n * 1.5));
-
-    // ปรับระดับเสียงตามความเร็ว (Pitch)
-    if (isAudioOn && osc) {
-        const freq = 80 + (rpm / 10);
-        osc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.1);
-    }
-}
-
-// ผูกฟังก์ชันกับ Slider
-document.getElementById('v-slider')?.addEventListener('input', updateSimulation);
-document.getElementById('n-slider')?.addEventListener('input', updateSimulation);
-
-let angle = 0;
-function animate() {
-    const v = parseFloat(document.getElementById('v-slider')?.value || 0);
-    const n = parseInt(document.getElementById('n-slider')?.value || 1);
-    const rotor = document.getElementById('rotor-group');
-    
-    if (rotor && v > 0) {
-        angle += (v * n) / 10;
-        rotor.setAttribute('transform', `rotate(${angle}, 200, 120)`);
-    }
-    requestAnimationFrame(animate);
-}
-animate();
-
-// --- 3. Gemini Chatbot (Vercel API Version) ---
 function toggleChat() { document.getElementById('chat-window').classList.toggle('active'); }
 
 async function askAI() {
@@ -125,7 +36,7 @@ document.getElementById('chat-input')?.addEventListener('keypress', (e) => { if(
 // --- 4. Quiz System (4 Choices & Higher Difficulty) ---
 const questions = [
     { 
-        q: "ตามกฎของโอห์ม ($V=IR$) ถ้าความต้านทาน (R) ของขดลวดคงที่ แต่เราเพิ่มแรงดันไฟฟ้า (V) กระแสไฟฟ้า (I) จะเป็นอย่างไร?", 
+        q: "ตามกฎของโอห์ม (V=IR) ถ้าความต้านทาน (R) ของขดลวดคงที่ แต่เราเพิ่มแรงดันไฟฟ้า (V) กระแสไฟฟ้า (I) จะเป็นอย่างไร?", 
         a: ["ลดลง", "เพิ่มขึ้น", "เท่าเดิม", "ไม่สามารถสรุปได้"], 
         correct: 1 
     },
@@ -179,5 +90,4 @@ function checkQuiz() {
     document.getElementById('result-box').style.display = 'block';
     document.getElementById('score-val').innerText = score;
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-
 }
