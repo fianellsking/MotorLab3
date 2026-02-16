@@ -54,7 +54,7 @@ function updateSimulation() {
     const n = parseInt(nSlider.value);
     const b = parseFloat(bSlider.value);
     const aInput = parseFloat(aSlider.value); // ค่าที่ได้จาก slider (5-30)
-    const a = aInput / 100
+    const a = aInput / 10
     const r = 2.0; 
     const i = v / r;
     
@@ -68,10 +68,10 @@ function updateSimulation() {
     if(coilVal) coilVal.innerText = n;
 
     // 2. คำนวณสมการฟิสิกส์: Torque = N * I * A * B (ปรับสเกลตัวคูณให้เลขดูสวย)
-    const torque = (n * i * a * b * 0.01).toFixed(3); 
+    const torque = (n * i * aInput * b * 0.01).toFixed(3); 
     
     // 3. คำนวณ RPM อ้างอิงจากแรงดันและแรงบิด (เพื่อให้ภาพและตัวเลขสัมพันธ์กัน)
-    const rpm = Math.floor(v * n * b * a * 15); 
+    const rpm = Math.floor(v * n * b * aInput * 15); 
     
     if(speedVal) speedVal.innerText = rpm;
     if(torqueVal) torqueVal.innerText = torque;
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
