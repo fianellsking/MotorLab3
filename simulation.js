@@ -60,7 +60,7 @@ function updateSimulation() {
     
     if(vDisp) vDisp.innerText = `${v.toFixed(1)} V`;
     if(nDisp) nDisp.innerText = n;
-    if(bDisp) bDisp.innerText = `${b.toFixed(1)} T`;
+    if(bDisp) bDisp.innerText = `${b.toFixed(3)} T`;
     if(aDisp) aDisp.innerText = `${aInput.toFixed(1)} cm²`;
 
     if(inputVal) inputVal.innerText = v.toFixed(1);
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
