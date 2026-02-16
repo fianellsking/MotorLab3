@@ -82,8 +82,6 @@ function updateSimulation() {
     if(currentVal) currentVal.innerText = i.toFixed(2);
     if(torqueVal) torqueVal.innerText = torque;
     if(speedVal) speedVal.innerText = rpm;
-}
-    
     // ลูกศรแรง (Force Vector) ยาวขึ้นตาม Torque
     const forceScale = torque * 20; 
     if(forceVectors) {
