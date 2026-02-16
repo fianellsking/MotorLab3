@@ -54,14 +54,14 @@ function updateSimulation() {
     const n = parseInt(nSlider.value);
     const b = parseFloat(bSlider.value);
     const aInput = parseFloat(aSlider.value); // ค่าที่ได้จาก slider (5-30)
-    const a = aInput / 10000; 
+    const a = aInput / 100
     const r = 2.0; 
     const i = v / r;
     
     if(vDisp) vDisp.innerText = `${v.toFixed(1)} V`;
     if(nDisp) nDisp.innerText = n;
     if(bDisp) bDisp.innerText = `${b.toFixed(1)} T`;
-    if(aDisp) aDisp.innerText = `${a.toFixed(1)} cm²`;
+    if(aDisp) aDisp.innerText = `${aInput.toFixed(1)} cm²`;
 
     if(inputVal) inputVal.innerText = v.toFixed(1);
     if(currentVal) currentVal.innerText = i.toFixed(2);
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
