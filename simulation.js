@@ -63,7 +63,7 @@ function updateSimulation() {
     if(vDisp) vDisp.innerText = `${v.toFixed(1)} V`;
     if(nDisp) nDisp.innerText = n;
     if(bDisp) bDisp.innerText = `${b.toFixed(1)} T`;
-    if(aDisp) aDisp.innerText = `${a.toFixed(1)} m²`;
+    if(aDisp) aDisp.innerText = `${a.toFixed(1)} cm²`;
 
     if(inputVal) inputVal.innerText = v.toFixed(1);
     if(currentVal) currentVal.innerText = i.toFixed(2);
@@ -98,7 +98,7 @@ function updateSimulation() {
     }
 
     // --- ระบบความร้อน (Overheat ตามกระแสไฟฟ้า I) ---
-    if (i > 3.5) { // ถ้าร้อนเกิน 3.5 แอมป์ (V > 7)
+    if (i > 3) { // ถ้าร้อนเกิน 3.5 แอมป์ (V > 7)
         if(alertBox) alertBox.className = "alert-visible";
         if(coilVisual) {
             coilVisual.setAttribute('stroke', '#ef4444');
@@ -169,3 +169,4 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
