@@ -126,7 +126,7 @@ function animate() {
 
     if (v > 0) {
         // ความเร็วการหมุนบนหน้าจอ สัมพันธ์กับตัวแปรทั้งหมด
-        angle += (v * n * b * a * 15) / 60; 
+        angle += (v * n * b * a * 15 * 4) / 60; 
         if(coilOnly) {
             coilOnly.style.transform = `rotateX(${angle}deg)`;
         }
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
