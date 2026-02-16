@@ -52,11 +52,19 @@ body {
     max-height: 400px;
 }
 
-/* Stats Panel ด้านล่าง */
 .stats-panel {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr); /* เปลี่ยนเป็น 5 ช่อง */
     gap: 1rem;
+}
+
+/* ปรับ Responsive เผื่อจอมือถือ/แท็บเล็ต */
+@media (max-width: 1024px) {
+    .sim-dashboard { grid-template-columns: 1fr; }
+    .stats-panel { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+    .stats-panel { grid-template-columns: repeat(2, 1fr); }
 }
 
 .stat-card {
@@ -197,4 +205,5 @@ body {
 @media (max-width: 1024px) {
     .sim-dashboard { grid-template-columns: 1fr; }
     .stats-panel { grid-template-columns: repeat(2, 1fr); }
+
 }
