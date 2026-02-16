@@ -56,7 +56,7 @@ function updateSimulation() {
     const aInput = parseFloat(aSlider.value); // ค่าที่ได้จาก slider (5-30)
     const a = aInput / 10
     const r = 500.0; 
-    const i = v / r;
+    const i = v * 1000 / r;
     
     if(vDisp) vDisp.innerText = `${v.toFixed(1)} V`;
     if(nDisp) nDisp.innerText = n;
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
