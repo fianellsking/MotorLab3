@@ -94,7 +94,7 @@ function updateSimulation() {
     }
 
     // --- ระบบความร้อน (Overheat ตามกระแสไฟฟ้า I) ---
-    if (i > 3) { // ถ้าร้อนเกิน 3.5 แอมป์ (V > 7)
+    if (i > 12) { // ถ้าร้อนเกิน 3.5 แอมป์ (V > 7)
         if(alertBox) alertBox.className = "alert-visible";
         if(coilVisual) {
             coilVisual.setAttribute('stroke', '#ef4444');
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
