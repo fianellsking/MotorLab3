@@ -71,7 +71,7 @@ function updateSimulation() {
     const torque = (n * i * aInput * b / 10000).toFixed(3); 
     
     // 3. คำนวณ RPM อ้างอิงจากแรงดันและแรงบิด (เพื่อให้ภาพและตัวเลขสัมพันธ์กัน)
-    const rpm = Math.floor(v * n * b * aInput * 15 * 10); 
+    const rpm = Math.floor(v * n * b * aInput * 15 * 10 / 9); 
     
     if(speedVal) speedVal.innerText = rpm;
     if(torqueVal) torqueVal.innerText = torque;
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
