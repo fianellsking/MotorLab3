@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     if (!apiKey) return res.status(500).json({ error: 'API Key not configured' });
 
     // ใช้ v1beta และรุ่น 2.0-flash (ตรวจสอบตัวสะกด gemini-2.0-flash ให้เป๊ะ)
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     try {
         const response = await fetch(apiUrl, {
