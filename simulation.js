@@ -53,42 +53,36 @@ function updateSimulation() {
     const v = parseFloat(vSlider.value);
     const n = parseInt(nSlider.value);
     const b = parseFloat(bSlider.value);
-    const a = parseFloat(aSlider.value);
+    const aInput = parseFloat(aSlider.value); // ค่าที่ได้จาก slider (5-30)
 
-    // 1. คำนวณกระแสไฟฟ้า I = V / R (สมมติความต้านทาน R = 2 โอห์ม)
+    // แปลงหน่วยจาก cm² เป็น m² สำหรับใช้ในสูตรฟิสิกส์
+    // 1 m² = 10,000 cm²
+    const a = aInput / 10000; 
+
+    // อัปเดตข้อความบน UI ให้โชว์หน่วย cm² ตามที่ผู้ใช้ปรับ
+    if(aDisp) aDisp.innerText = `${aInput} cm²`;
+    
+    // ... ส่วนการคำนวณอื่นๆ (i, torque, rpm) ใช้ตัวแปร 'a' ที่แปลงแล้วได้เลย ...
     const r = 2.0; 
     const i = v / r;
+    const torque = (n * i * a * b).toFixed(5); // ค่าจะน้อยลงตามความจริงของมอเตอร์จิ๋ว
+    const rpm = Math.floor(v * n * b * aInput * 5); // ใช้ aInput คูณเพื่อให้เลข RPM ยังดูเยอะอยู่
 
-    // อัปเดตข้อความบน UI
-    if(vDisp) vDisp.innerText = `${v.toFixed(1)} V`;
-    if(nDisp) nDisp.innerText = n;
-    if(bDisp) bDisp.innerText = `${b.toFixed(1)} T`;
-    if(aDisp) aDisp.innerText = `${a.toFixed(1)} cm²`;
-
-    if(inputVal) inputVal.innerText = v.toFixed(1);
-    if(currentVal) currentVal.innerText = i.toFixed(2);
-    if(coilVal) coilVal.innerText = n;
-
-    // 2. คำนวณสมการฟิสิกส์: Torque = N * I * A * B (ปรับสเกลตัวคูณให้เลขดูสวย)
-    const torque = (n * i * a * b * 0.01).toFixed(3); 
-    
-    // 3. คำนวณ RPM อ้างอิงจากแรงดันและแรงบิด (เพื่อให้ภาพและตัวเลขสัมพันธ์กัน)
-    const rpm = Math.floor(v * n * b * a * 15); 
-    
-    if(speedVal) speedVal.innerText = rpm;
-    if(torqueVal) torqueVal.innerText = torque;
-
-    // --- เอฟเฟกต์ภาพ ---
+    // --- ปรับการขยายขนาดขดลวด (Visual Scaling) ---
     if(coilVisual) {
-        coilVisual.setAttribute('stroke-width', 2 + (n * 0.5));
-        
-        // ขยายขนาดขดลวดตามพื้นที่ A 
-        const scaleA = Math.sqrt(a);
-        coilVisual.setAttribute('width', 160 * scaleA);
-        coilVisual.setAttribute('height', 60 * scaleA);
-        coilVisual.setAttribute('x', -80 * scaleA);
-        coilVisual.setAttribute('y', -30 * scaleA);
+        // ปรับสูตร scale ใหม่เพื่อให้ขนาดบนจอไม่ใหญ่จนล้น (หารด้วย 10 เพื่อให้พอดีกรอบ)
+        const visualScale = Math.sqrt(aInput / 10); 
+        coilVisual.setAttribute('width', 160 * visualScale);
+        coilVisual.setAttribute('height', 60 * visualScale);
+        coilVisual.setAttribute('x', -80 * visualScale);
+        coilVisual.setAttribute('y', -30 * visualScale);
     }
+    
+    // อัปเดตตัวเลขอื่นๆ ตามปกติ...
+    if(currentVal) currentVal.innerText = i.toFixed(2);
+    if(torqueVal) torqueVal.innerText = torque;
+    if(speedVal) speedVal.innerText = rpm;
+}
     
     // ลูกศรแรง (Force Vector) ยาวขึ้นตาม Torque
     const forceScale = torque * 20; 
@@ -169,4 +163,5 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
