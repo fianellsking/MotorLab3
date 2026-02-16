@@ -68,7 +68,7 @@ function updateSimulation() {
     if(coilVal) coilVal.innerText = n;
 
     // 2. คำนวณสมการฟิสิกส์: Torque = N * I * A * B (ปรับสเกลตัวคูณให้เลขดูสวย)
-    const torque = (n * i * aInput * b).toFixed(3); 
+    const torque = (n * i * aInput * b / 10000).toFixed(3); 
     
     // 3. คำนวณ RPM อ้างอิงจากแรงดันและแรงบิด (เพื่อให้ภาพและตัวเลขสัมพันธ์กัน)
     const rpm = Math.floor(v * n * b * aInput * 15 * 10); 
@@ -87,7 +87,7 @@ function updateSimulation() {
         coilVisual.setAttribute('x', -80 * scaleA);
         coilVisual.setAttribute('y', -30 * scaleA);
     }
-    const forceScale = torque * 20; 
+    const forceScale = torque * 2; 
     if(forceVectors) {
         forceVectors.setAttribute('transform', `scale(1, ${0.5 + forceScale})`);
         forceVectors.style.opacity = (v > 0 && b > 0) ? 0.9 : 0.2;
@@ -165,6 +165,7 @@ stopBtn?.addEventListener('click', () => {
 // รันครั้งแรก
 updateSimulation();
 animate();
+
 
 
 
