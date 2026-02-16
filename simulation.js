@@ -1,24 +1,24 @@
-// simulation.js
-
 // --- ดึง Elements มาให้ครบ ---
 const vSlider = document.getElementById('v-slider');
 const nSlider = document.getElementById('n-slider');
+const bSlider = document.getElementById('b-slider'); // ดึง B
+const aSlider = document.getElementById('a-slider'); // ดึง A
+
 const vDisp = document.getElementById('v-disp');
 const nDisp = document.getElementById('n-disp');
+const bDisp = document.getElementById('b-disp');
+const aDisp = document.getElementById('a-disp');
 
-// กล่องตัวเลขด้านล่าง 4 กล่อง
 const speedVal = document.getElementById('speed-val');
 const torqueVal = document.getElementById('torque-val');
 const inputVal = document.getElementById('input-val');
+const currentVal = document.getElementById('current-val'); // ดึง I
 const coilVal = document.getElementById('coil-val');
 
-// ชิ้นส่วนในภาพ Simulation
 const coilOnly = document.getElementById('coil-only');
 const coilVisual = document.getElementById('coil-visual');
 const forceVectors = document.getElementById('force-vectors');
 const alertBox = document.getElementById('overheat-alert');
-
-// ปุ่มควบคุม
 const stopBtn = document.getElementById('stop-btn');
 const soundBtn = document.getElementById('sound-btn');
 
@@ -49,38 +49,56 @@ soundBtn?.addEventListener('click', () => {
 });
 
 // --- ฟังก์ชันอัปเดตตัวเลขและภาพ ---
-// --- ฟังก์ชันอัปเดตตัวเลขและภาพ ---
 function updateSimulation() {
     const v = parseFloat(vSlider.value);
     const n = parseInt(nSlider.value);
+    const b = parseFloat(bSlider.value);
+    const a = parseFloat(aSlider.value);
 
+    // 1. คำนวณกระแสไฟฟ้า I = V / R (สมมติความต้านทาน R = 2 โอห์ม)
+    const r = 2.0; 
+    const i = v / r;
+
+    // อัปเดตข้อความบน UI
     if(vDisp) vDisp.innerText = `${v.toFixed(1)} V`;
     if(nDisp) nDisp.innerText = n;
+    if(bDisp) bDisp.innerText = `${b.toFixed(1)} T`;
+    if(aDisp) aDisp.innerText = `${a.toFixed(1)} m²`;
+
     if(inputVal) inputVal.innerText = v.toFixed(1);
+    if(currentVal) currentVal.innerText = i.toFixed(2);
     if(coilVal) coilVal.innerText = n;
 
-    // --- สูตรคำนวณใหม่ให้สมจริง ---
-    // เป้าหมาย: 2.5V, 10 Turns -> 1000 RPM 
-    // สูตร: RPM = V * N * 40 
-    const rpm = Math.floor(v * n * 40); 
+    // 2. คำนวณสมการฟิสิกส์: Torque = N * I * A * B (ปรับสเกลตัวคูณให้เลขดูสวย)
+    const torque = (n * i * a * b * 0.01).toFixed(3); 
     
-    // แรงบิด (Nm) ปรับสเกลให้ดูเป็นหน่วยนิวตันเมตร (สมมติสเกลมอเตอร์เล็ก)
-    const torque = (v * n * 0.005).toFixed(3); 
+    // 3. คำนวณ RPM อ้างอิงจากแรงดันและแรงบิด (เพื่อให้ภาพและตัวเลขสัมพันธ์กัน)
+    const rpm = Math.floor(v * n * b * a * 15); 
     
     if(speedVal) speedVal.innerText = rpm;
     if(torqueVal) torqueVal.innerText = torque;
 
     // --- เอฟเฟกต์ภาพ ---
-    if(coilVisual) coilVisual.setAttribute('stroke-width', 2 + (n * 0.5));
+    if(coilVisual) {
+        coilVisual.setAttribute('stroke-width', 2 + (n * 0.5));
+        
+        // ขยายขนาดขดลวดตามพื้นที่ A 
+        const scaleA = Math.sqrt(a);
+        coilVisual.setAttribute('width', 160 * scaleA);
+        coilVisual.setAttribute('height', 60 * scaleA);
+        coilVisual.setAttribute('x', -80 * scaleA);
+        coilVisual.setAttribute('y', -30 * scaleA);
+    }
     
-    const forceScale = (v * n) / 20; 
+    // ลูกศรแรง (Force Vector) ยาวขึ้นตาม Torque
+    const forceScale = torque * 20; 
     if(forceVectors) {
         forceVectors.setAttribute('transform', `scale(1, ${0.5 + forceScale})`);
-        forceVectors.style.opacity = v > 0 ? 0.9 : 0.2;
+        forceVectors.style.opacity = (v > 0 && b > 0) ? 0.9 : 0.2;
     }
 
-    // --- ระบบความร้อน (Overheat) ---
-    if (v > 7.5) { // ปรับให้ร้อนยากขึ้นนิดนึงที่ 7.5V
+    // --- ระบบความร้อน (Overheat ตามกระแสไฟฟ้า I) ---
+    if (i > 3.5) { // ถ้าร้อนเกิน 3.5 แอมป์ (V > 7)
         if(alertBox) alertBox.className = "alert-visible";
         if(coilVisual) {
             coilVisual.setAttribute('stroke', '#ef4444');
@@ -94,10 +112,7 @@ function updateSimulation() {
         }
     }
 
-    // --- ระบบเสียง (แปรผันตาม RPM) ---
     if (audioCtx && !isMuted && isRunning && v > 0) {
-        // ให้เสียงเริ่มต้นที่ 100Hz และเพิ่มขึ้นตามความเร็วรอบ
-        // ยิ่ง RPM สูง เสียงยิ่งแหลม (High Pitch)
         const baseFreq = 100;
         const pitchShift = rpm / 5; 
         osc.frequency.setTargetAtTime(baseFreq + pitchShift, audioCtx.currentTime, 0.1);
@@ -110,47 +125,43 @@ function animate() {
 
     const v = parseFloat(vSlider.value);
     const n = parseInt(nSlider.value);
+    const b = parseFloat(bSlider.value);
+    const a = parseFloat(aSlider.value);
 
     if (v > 0) {
-        // ปรับความเร็วการหมุนในจอให้สัมพันธ์กับ RPM
-        // หารด้วยค่าคงที่เพื่อให้ภาพไม่หมุนเร็วจนมองไม่ทัน
-        angle += (v * n * 40) / 60; 
-        
+        // ความเร็วการหมุนบนหน้าจอ สัมพันธ์กับตัวแปรทั้งหมด
+        angle += (v * n * b * a * 15) / 60; 
         if(coilOnly) {
             coilOnly.style.transform = `rotateX(${angle}deg)`;
         }
     }
-    
     animationId = requestAnimationFrame(animate);
 }
 
 // --- ปุ่มกดและ Event ---
 vSlider?.addEventListener('input', updateSimulation);
 nSlider?.addEventListener('input', updateSimulation);
+bSlider?.addEventListener('input', updateSimulation);
+aSlider?.addEventListener('input', updateSimulation);
 
 stopBtn?.addEventListener('click', () => {
     isRunning = !isRunning;
     if (isRunning) {
-        // เล่นต่อ
         stopBtn.innerHTML = '<span class="material-icons-round">pause</span> STOP';
         stopBtn.classList.remove('stopped');
         animate();
         if(gainNode && !isMuted) gainNode.gain.setTargetAtTime(0.1, audioCtx.currentTime, 0.1);
     } else {
-        // หยุดและดีดกลับมาที่ 0 องศา (ตั้งต้น)
         stopBtn.innerHTML = '<span class="material-icons-round">play_arrow</span> START';
         stopBtn.classList.add('stopped');
         cancelAnimationFrame(animationId);
         
-        angle = 0; // รีเซ็ตมุม
+        angle = 0; 
         if(coilOnly) {
-            coilOnly.style.transition = 'transform 0.3s ease-out'; // ใส่ลูกเล่นให้มันค่อยๆ ดีดกลับ
+            coilOnly.style.transition = 'transform 0.3s ease-out'; 
             coilOnly.style.transform = `rotateX(0deg)`;
-            
-            // เอา transition ออกหลังจากดีดกลับเสร็จ จะได้ไม่กวนตอนเริ่มหมุนใหม่
             setTimeout(() => { coilOnly.style.transition = 'none'; }, 300);
         }
-        
         if(gainNode) gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
     }
 });
